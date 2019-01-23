@@ -62,6 +62,19 @@ int get_vessel_data() {
       sendToDisplay1(String("page ") + String(PageDisplay1));
       sendToDisplay2(String("page ") + String(PageDisplay2));
       AtmosphereGauge(10);   //Atmosphere gauge off
+        //turn off Leds
+  digitalWrite(pLIGHTSLED, LOW); 
+  digitalWrite(pGEARSLED, LOW);
+  digitalWrite(pBRAKESLED, LOW);
+  digitalWrite(pACTION1LED, LOW);
+  digitalWrite(pACTION2LED, LOW);
+  digitalWrite(pACTION3LED, LOW);
+  digitalWrite(pACTION4LED, LOW);
+  digitalWrite(pACTION5LED, LOW);
+  digitalWrite(pACTION6LED, LOW);    
+  digitalWrite(pLADDERLED, LOW);
+  digitalWrite(pSOLARLED, LOW);
+  digitalWrite(pCHUTESLED, LOW);
     }    
   }
   return returnValue;
