@@ -19,39 +19,54 @@ void controlsInit() {
   pinMode(pMODE, INPUT_PULLUP);
   pinMode(pABORT, INPUT);
   pinMode(pARM, INPUT);
-  pinMode(pSTAGE, INPUT_PULLUP);
+  //pinMode(pSTAGE, INPUT_PULLUP);
   pinMode(pSAS, INPUT_PULLUP);
   pinMode(pRCS, INPUT_PULLUP);
   pinMode(pprecision, INPUT_PULLUP);  
-  pinMode(pLIGHTS, INPUT_PULLUP);
+  //pinMode(pLIGHTS, INPUT_PULLUP);
   pinMode(pLIGHTSLED, OUTPUT);
-  pinMode(pBRAKES, INPUT_PULLUP);
+  //pinMode(pBRAKES, INPUT_PULLUP);
   pinMode(pBRAKESLED, OUTPUT);
-  pinMode(pGEARS, INPUT_PULLUP);
+  //pinMode(pGEARS, INPUT_PULLUP);
   pinMode(pGEARSLED, OUTPUT);
-  pinMode(pSOLAR, INPUT_PULLUP);
+  //pinMode(pSOLAR, INPUT_PULLUP);
   pinMode(pSOLARLED, OUTPUT);      
-  pinMode(pLADDER, INPUT_PULLUP);
+  //pinMode(pLADDER, INPUT_PULLUP);
   pinMode(pLADDERLED, OUTPUT);
-  pinMode(pCHUTES, INPUT_PULLUP);
+  //pinMode(pCHUTES, INPUT_PULLUP);
   pinMode(pCHUTESLED, OUTPUT);
-  pinMode(pACTION6, INPUT_PULLUP);
+  //pinMode(pACTION6, INPUT_PULLUP);
   pinMode(pACTION6LED, OUTPUT);
-  pinMode(pACTION5, INPUT_PULLUP);
+  //pinMode(pACTION5, INPUT_PULLUP);
   pinMode(pACTION5LED, OUTPUT);
-  pinMode(pACTION4, INPUT_PULLUP);
+  //pinMode(pACTION4, INPUT_PULLUP);
   pinMode(pACTION4LED, OUTPUT);
-  pinMode(pACTION3, INPUT_PULLUP);
+  //pinMode(pACTION3, INPUT_PULLUP);
   pinMode(pACTION3LED, OUTPUT);
-  pinMode(pACTION2, INPUT_PULLUP);
+  //pinMode(pACTION2, INPUT_PULLUP);
   pinMode(pACTION2LED, OUTPUT);
-  pinMode(pACTION1, INPUT_PULLUP);
+  //pinMode(pACTION1, INPUT_PULLUP);
   pinMode(pACTION1LED, OUTPUT);
   pinMode(pswitch1, INPUT_PULLUP);
   pinMode(pswitch2, INPUT_PULLUP);
   pinMode(pswitch3, INPUT_PULLUP);
   pinMode(pswitch4, INPUT_PULLUP);
   pinMode(pmodeswitch, INPUT_PULLUP);
+  
+//setting up bouncers
+  debouncerStage.begin();
+  debouncerLights.begin();
+  debouncerBrakes.begin();
+  debouncerGears.begin();
+  debouncerSolar.begin();
+  debouncerChutes.begin();
+  debouncerLadder.begin();
+  debouncerA6.begin();
+  debouncerA5.begin();
+  debouncerA4.begin();
+  debouncerA3.begin();
+  debouncerA2.begin();
+  debouncerA1.begin(); 
 }
 
 void testLEDS(int testdelay){
@@ -101,5 +116,7 @@ void testLEDS(int testdelay){
   delay(testdelay);  
   AtmosphereGauge(0.05); //LED11
   delay(testdelay);  
-  AtmosphereGauge(0.02); //LED12             
+  AtmosphereGauge(0.02); //LED12
+  delay(testdelay);  
+  AtmosphereGauge(10); //LED12              
 }

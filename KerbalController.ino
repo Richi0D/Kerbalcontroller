@@ -1,4 +1,4 @@
-
+#include <Button.h>
 #define SERIAL_RX_BUFFER_SIZE 256
 
 //analog pins
@@ -113,7 +113,7 @@ const byte pswitch4 = 65;    //A11 Switch position 4, display mode Body Info
 #define details(name) (uint8_t*)&name,sizeof(name)
 
 //variables used in timing
-const int IDLETIMER = 20000;        //if no message received from KSP for more than 10s, go idle (default 2000)
+const int IDLETIMER = 10000;        //if no message received from KSP for more than 10s, go idle (default 2000)
 const int CONTROLREFRESH = 20;      //send control packet every 10 ms (default 25)
 const int DISPLAYREFRESH = 50;      //refresh Display every 40 ms = 25fps
 unsigned long deadtime, deadtimeOld, controlTime, controlTimeOld, displayTime, displayTimeOld = 0;
@@ -225,6 +225,21 @@ struct ControlPacket {
   int Throttle;                       //    0 -> 1000
   int WheelThrottle;                  //    0 -> 1000
 };
+
+//variables used for detect bounce buttons
+Button debouncerStage(pSTAGE);
+Button debouncerLights(pLIGHTS);
+Button debouncerBrakes(pBRAKES);
+Button debouncerGears(pGEARS);
+Button debouncerSolar(pSOLAR);
+Button debouncerChutes(pCHUTES);
+Button debouncerLadder(pLADDER);
+Button debouncerA6(pACTION6);
+Button debouncerA5(pACTION5);
+Button debouncerA4(pACTION4);
+Button debouncerA3(pACTION3);
+Button debouncerA2(pACTION2);
+Button debouncerA1(pACTION1);
 
 //in-game state used to update button LEDs
 bool lights_on = false;

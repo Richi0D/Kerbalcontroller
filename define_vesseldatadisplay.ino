@@ -57,12 +57,15 @@ int get_vessel_data() {
     {
       deadtimeOld = now;
       Connected = false;
-      PageDisplay1 = 1;
-      PageDisplay2 = 1;
-      sendToDisplay1(String("page ") + String(PageDisplay1));
-      sendToDisplay2(String("page ") + String(PageDisplay2));
+      if (PageDisplay1 !=1){
+        PageDisplay1 = 1;
+        sendToDisplay1(String("page ") + String(PageDisplay1));}
+      if (PageDisplay2 !=1){
+        PageDisplay2 = 1;
+        sendToDisplay2(String("page ") + String(PageDisplay2));}
       AtmosphereGauge(10);   //Atmosphere gauge off
-        //turn off Leds
+      
+  //turn off Leds
   digitalWrite(pLIGHTSLED, LOW); 
   digitalWrite(pGEARSLED, LOW);
   digitalWrite(pBRAKESLED, LOW);

@@ -49,22 +49,22 @@ void define_control_packet() {
     if(digitalRead(pABORT)){MainControls(ABORT, true);} else {MainControls(ABORT, false);}
   
     //momentary stage button
-    if(!digitalRead(pSTAGE) && digitalRead(pARM)){MainControls(STAGE, true);} else {MainControls(STAGE, false);}
+    if(debouncerStage.pressed() && digitalRead(pARM)){MainControls(STAGE, true);} else {MainControls(STAGE, false);}
 
     
     //toggle buttons
-    if(!digitalRead(pLIGHTS)){MainControls(LIGHTS, !lights_on);}
-    if(!digitalRead(pGEARS)){MainControls(GEARS, !gears_on);}
-    if(!digitalRead(pBRAKES)){MainControls(BRAKES, !brakes_on);}
-    if(!digitalRead(pACTION1)){ControlGroups(1, !action1_on);}
-    if(!digitalRead(pACTION2)){ControlGroups(2, !action2_on);}
-    if(!digitalRead(pACTION3)){ControlGroups(3, !action3_on);}
-    if(!digitalRead(pACTION4)){ControlGroups(4, !action4_on);}
-    if(!digitalRead(pACTION5)){ControlGroups(5, !action5_on);} 
-    if(!digitalRead(pACTION6)){ControlGroups(6, !action6_on);}      
-    if(!digitalRead(pLADDER)){ControlGroups(7, !ladder_on);}
-    if(!digitalRead(pCHUTES)){ControlGroups(8, !chutes_on);}    
-    if(!digitalRead(pSOLAR)){ControlGroups(9, !solar_on);}
+    if(debouncerLights.pressed()){MainControls(LIGHTS, !lights_on);}
+    if(debouncerGears.pressed()){MainControls(GEARS, !gears_on);}
+    if(debouncerBrakes.pressed()){MainControls(BRAKES, !brakes_on);}
+    if(debouncerA1.pressed()){ControlGroups(1, !action1_on);}
+    if(debouncerA2.pressed()){ControlGroups(2, !action2_on);}
+    if(debouncerA3.pressed()){ControlGroups(3, !action3_on);}
+    if(debouncerA4.pressed()){ControlGroups(4, !action4_on);}
+    if(debouncerA5.pressed()){ControlGroups(5, !action5_on);} 
+    if(debouncerA6.pressed()){ControlGroups(6, !action6_on);}      
+    if(debouncerLadder.pressed()){ControlGroups(7, !ladder_on);}
+    if(debouncerChutes.pressed()){ControlGroups(8, !chutes_on);}    
+    if(debouncerSolar.pressed()){ControlGroups(9, !solar_on);}
 
 
     //check flymode 
@@ -81,10 +81,14 @@ void define_control_packet() {
     switch(flymode){
     case 0:
       CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-1000,0),-1000,0);}
-      else {CPacket.Yaw = 0;}
+      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,1000),0,1000);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),1000,550,-1000,0),-1000,0);}
+      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-1000,0),-1000,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),450,20,0,1000),0,1000);}
+      else {CPacket.Yaw = 0;
+      CPacket.WheelSteer = 0;}
       if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,1000),0,1000);}
       else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-1000,0),-1000,0);}
       else {CPacket.Pitch = 0;}
@@ -105,6 +109,7 @@ void define_control_packet() {
       break;
     case 1:
       CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
       
       if(analogRead(pRX) >= 550){CPacket.Roll = constrain(map(analogRead(pRX),550,1000,0,1000),0,1000);}
       else if(analogRead(pRX) <= 450){CPacket.Roll = constrain(map(analogRead(pRX),20,450,-1000,0),-1000,0);}
@@ -112,9 +117,12 @@ void define_control_packet() {
       if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,1000),0,1000);}
       else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-1000,0),-1000,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-1000,0),-1000,0);}
-      else {CPacket.Yaw = 0;}
+      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,1000),0,1000);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1000,550,-1000,0),-1000,0);}
+      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-1000,0),-1000,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),450,20,0,1000),0,1000);}
+      else {CPacket.Yaw = 0;
+      CPacket.WheelSteer = 0;}
 
       if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-1000,0),-1000,0);}
       else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,1000),0,1000);}
@@ -128,11 +136,15 @@ void define_control_packet() {
     
       break;
     case 2:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,500),0,500);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,200),0,200);}
-      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-200,0),-200,0);}
-      else {CPacket.Yaw = 0;}
+      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,200),0,200);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),1000,550,-200,0),-200,0);}
+      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-200,0),-200,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),450,20,0,200),0,200);}
+      else {CPacket.Yaw = 0;
+      CPacket.WheelSteer = 0;}
       if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,200),0,200);}
       else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-200,0),-200,0);}
       else {CPacket.Pitch = 0;}
@@ -152,17 +164,21 @@ void define_control_packet() {
     
       break;
     case 3:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,500),0,500);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Roll = constrain(map(analogRead(pRX),550,1000,0,-200),0,-200);}
-      else if(analogRead(pRX) <= 450){CPacket.Roll = constrain(map(analogRead(pRX),20,450,200,0),200,0);}
+      if(analogRead(pRX) >= 550){CPacket.Roll = constrain(map(analogRead(pRX),550,1000,0,200),0,200);}
+      else if(analogRead(pRX) <= 450){CPacket.Roll = constrain(map(analogRead(pRX),20,450,-200,0),-200,0);}
       else {CPacket.Roll = 0;}
-      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,-200),0,-200);}
-      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,200,0),200,0);}
+      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,200),0,200);}
+      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-200,0),-200,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,200),0,200);}
-      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-200,0),-200,0);}
-      else {CPacket.Yaw = 0;}
+      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,200),0,200);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1000,550,-200,0),-200,0);}
+      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-200,0),-200,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),450,20,0,200),0,200);}
+      else {CPacket.Yaw = 0;
+      CPacket.WheelSteer = 0;}
 
       if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-200,0),-200,-0);}
       else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,200),0,200);}
@@ -209,71 +225,3 @@ else {
     }
 }
   
-/*
-
-//----------------------TEST--------------------------------
-
-// Variables will change:
-byte buttonState;             // the current reading from the input pin
-byte lastButtonState = LOW;   // the previous reading from the input pin
-
-// the following variables are unsigned long's because the time, measured
-// in miliseconds, will quickly become a bigger number than can be stored
-// in an int.
-unsigned long lastDebounceTime = 0;  // the last time the output pin
-                                     // was toggled
-unsigned long debounceDelay = 50;    // the debounce time; increase
-                                     // if the output flickers
-
-
-
-
-
-
-void sendButton()
-{
-  // Read the state of the switch into a local variable.
-  byte reading = digitalRead(pSTAGE);
-
-  // check to see if you just pressed the button
-  // (i.e. the input went from LOW to HIGH),  and you've waited
-  // long enough since the last press to ignore any noise:
-
-  // If the switch changed, due to noise or pressing:
-  if (reading != lastButtonState) {
-    // reset the debouncing timer
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    // whatever the reading is at, it's been there for longer
-    // than the debounce delay, so take it as the actual current state:
-
-    // if the button state has changed:
-    if (reading != buttonState) {
-      buttonState = reading;
-
-      // If the new button state is HIGH, that means the button
-      // has just been pressed.
-      if (buttonState == LOW) {
-        // Send a message to the plugin activating the Stage
-        // action group. The plugin will then activate the
-        // next stage.
-        if (PageDisplay1>5){ //for testing
-          PageDisplay1=-1; 
-        }
-        //if (PageDisplay2>2){ //for testing
-        //PageDisplay2=-1; 
-        //}
-      PageDisplay1++;
-      sendToDisplay1(String("page ") + String(PageDisplay1));
-      //PageDisplay2++;
-      //sendToDisplay1(String("page ") + String(PageDisplay2));  
-      }
-    }
-  }
-
-  // save the reading.  Next time through the loop,
-  // it'll be the lastButtonState:
-  lastButtonState = reading;
-}*/
