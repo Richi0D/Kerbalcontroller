@@ -77,117 +77,120 @@ void define_control_packet() {
      else if((!digitalRead(pprecision)) and (digitalRead(pmodeswitch))){
        flymode = 3;} // plane mode + precision
      else {flymode = 0;}  
+
+    int deadzone = 25;
+    int deadzonethrottle = 10;
         
     switch(flymode){
     case 0:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
-      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,1000),0,1000);
-      CPacket.WheelSteer = constrain(map(analogRead(pRX),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-1000,0),-1000,0);
-      CPacket.WheelSteer = constrain(map(analogRead(pRX),450,20,0,1000),0,1000);}
+      if(analogRead(pRX) >= 512+deadzone){CPacket.Yaw = constrain(map(analogRead(pRX),512+deadzone,1023,0,1000),0,1000);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pRX) <= 512-deadzone){CPacket.Yaw = constrain(map(analogRead(pRX),0,512-deadzone,-1000,0),-1000,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.Yaw = 0;
       CPacket.WheelSteer = 0;}
-      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-1000,0),-1000,0);}
+      if(analogRead(pRY) >= 512+deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),512+deadzone,1023,0,1000),0,1000);}
+      else if(analogRead(pRY) <= 512-deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),0,512-deadzone,-1000,0),-1000,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Roll = constrain(map(analogRead(pRZ),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRZ) <= 450){CPacket.Roll = constrain(map(analogRead(pRZ),20,450,-1000,0),-1000,0);}
+      if(analogRead(pRZ) >= 512+deadzone){CPacket.Roll = constrain(map(analogRead(pRZ),512+deadzone,1023,0,1000),0,1000);}
+      else if(analogRead(pRZ) <= 512-deadzone){CPacket.Roll = constrain(map(analogRead(pRZ),0,512-deadzone,-1000,0),-1000,0);}
       else {CPacket.Roll = 0;}
 
-      if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,1000),0,1000);}
+      if(analogRead(pTX) >= 512+deadzone){CPacket.TX = constrain(map(analogRead(pTX),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTX) <= 512-deadzone){CPacket.TX = constrain(map(analogRead(pTX),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TX = 0;}
-      if(analogRead(pTY) >= 550){CPacket.TY = constrain(map(analogRead(pTY),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTY) <= 450){CPacket.TY = constrain(map(analogRead(pTY),450,20,0,1000),0,1000);}
+      if(analogRead(pTY) >= 512+deadzone){CPacket.TY = constrain(map(analogRead(pTY),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTY) <= 512-deadzone){CPacket.TY = constrain(map(analogRead(pTY),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TY = 0;}
-      if(analogRead(pTZ) >= 550){CPacket.TZ = constrain(map(analogRead(pTZ),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTZ) <= 450){CPacket.TZ = constrain(map(analogRead(pTZ),450,20,0,1000),0,1000);}
+      if(analogRead(pTZ) >= 512+deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTZ) <= 512-deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TZ = 0;}
 
       break;
     case 1:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
-      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Roll = constrain(map(analogRead(pRX),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRX) <= 450){CPacket.Roll = constrain(map(analogRead(pRX),20,450,-1000,0),-1000,0);}
+      if(analogRead(pRX) >= 512+deadzone){CPacket.Roll = constrain(map(analogRead(pRX),512+deadzone,1023,0,1000),0,1000);}
+      else if(analogRead(pRX) <= 512-deadzone){CPacket.Roll = constrain(map(analogRead(pRX),0,512-deadzone,-1000,0),-1000,0);}
       else {CPacket.Roll = 0;}
-      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,1000),0,1000);}
-      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-1000,0),-1000,0);}
+      if(analogRead(pRY) >= 512+deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),512+deadzone,1023,0,1000),0,1000);}
+      else if(analogRead(pRY) <= 512-deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),0,512-deadzone,-1000,0),-1000,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,1000),0,1000);
-      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-1000,0),-1000,0);
-      CPacket.WheelSteer = constrain(map(analogRead(pRZ),450,20,0,1000),0,1000);}
+      if(analogRead(pRZ) >= 512+deadzone){CPacket.Yaw = constrain(map(analogRead(pRZ),512+deadzone,1023,0,1000),0,1000);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pRZ) <= 512-deadzone){CPacket.Yaw = constrain(map(analogRead(pRZ),0,512-deadzone,-1000,0),-1000,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.Yaw = 0;
       CPacket.WheelSteer = 0;}
 
-      if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,1000),0,1000);}
+      if(analogRead(pTX) >= 512+deadzone){CPacket.TX = constrain(map(analogRead(pTX),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTX) <= 512-deadzone){CPacket.TX = constrain(map(analogRead(pTX),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TX = 0;}
-      if(analogRead(pTY) >= 550){CPacket.TY = constrain(map(analogRead(pTY),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTY) <= 450){CPacket.TY = constrain(map(analogRead(pTY),450,20,0,1000),0,1000);}
+      if(analogRead(pTY) >= 512+deadzone){CPacket.TY = constrain(map(analogRead(pTY),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTY) <= 512-deadzone){CPacket.TY = constrain(map(analogRead(pTY),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TY = 0;}
-      if(analogRead(pTZ) >= 550){CPacket.TZ = constrain(map(analogRead(pTZ),1000,550,-1000,0),-1000,0);}
-      else if(analogRead(pTZ) <= 450){CPacket.TZ = constrain(map(analogRead(pTZ),450,20,0,1000),0,1000);}
+      if(analogRead(pTZ) >= 512+deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),1023,512+deadzone,-1000,0),-1000,0);}
+      else if(analogRead(pTZ) <= 512-deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),512-deadzone,0,0,1000),0,1000);}
       else {CPacket.TZ = 0;}
     
       break;
     case 2:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
-      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Yaw = constrain(map(analogRead(pRX),550,1000,0,200),0,200);
-      CPacket.WheelSteer = constrain(map(analogRead(pRX),1000,550,-200,0),-200,0);}
-      else if(analogRead(pRX) <= 450){CPacket.Yaw = constrain(map(analogRead(pRX),20,450,-200,0),-200,0);
-      CPacket.WheelSteer = constrain(map(analogRead(pRX),450,20,0,200),0,200);}
+      if(analogRead(pRX) >= 512+deadzone){CPacket.Yaw = constrain(map(analogRead(pRX),512+deadzone,1023,0,500),0,500);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pRX) <= 512-deadzone){CPacket.Yaw = constrain(map(analogRead(pRX),0,512-deadzone,-500,0),-500,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRX),512-deadzone,0,0,500),0,500);}
       else {CPacket.Yaw = 0;
       CPacket.WheelSteer = 0;}
-      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,200),0,200);}
-      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-200,0),-200,0);}
+      if(analogRead(pRY) >= 512+deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),512+deadzone,1023,0,500),0,500);}
+      else if(analogRead(pRY) <= 512-deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),0,512-deadzone,-500,0),-500,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Roll = constrain(map(analogRead(pRZ),550,1000,0,200),0,200);}
-      else if(analogRead(pRZ) <= 450){CPacket.Roll = constrain(map(analogRead(pRZ),20,450,-200,0),-200,0);}
+      if(analogRead(pRZ) >= 512+deadzone){CPacket.Roll = constrain(map(analogRead(pRZ),512+deadzone,1023,0,500),0,500);}
+      else if(analogRead(pRZ) <= 512-deadzone){CPacket.Roll = constrain(map(analogRead(pRZ),0,512-deadzone,-500,0),-500,0);}
       else {CPacket.Roll = 0;}
 
-      if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-200,0),-200,-0);}
-      else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,200),0,200);}
+      if(analogRead(pTX) >= 512+deadzone){CPacket.TX = constrain(map(analogRead(pTX),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTX) <= 512-deadzone){CPacket.TX = constrain(map(analogRead(pTX),512-deadzone,0,0,500),0,500);}
       else {CPacket.TX = 0;}
-      if(analogRead(pTY) >= 550){CPacket.TY = constrain(map(analogRead(pTY),1000,550,-200,0),-200,-0);}
-      else if(analogRead(pTY) <= 450){CPacket.TY = constrain(map(analogRead(pTY),450,20,0,200),0,200);}
+      if(analogRead(pTY) >= 512+deadzone){CPacket.TY = constrain(map(analogRead(pTY),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTY) <= 512-deadzone){CPacket.TY = constrain(map(analogRead(pTY),512-deadzone,0,0,500),0,500);}
       else {CPacket.TY = 0;}
-      if(analogRead(pTZ) >= 550){CPacket.TZ = constrain(map(analogRead(pTZ),1000,550,-200,0),-200,0);}
-      else if(analogRead(pTZ) <= 450){CPacket.TZ = constrain(map(analogRead(pTZ),450,20,0,200),0,200);}
+      if(analogRead(pTZ) >= 512+deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTZ) <= 512-deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),512-deadzone,0,0,500),0,500);}
       else {CPacket.TZ = 0;}
     
       break;
     case 3:
-      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
-      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1000,20,0,1023),0,1000);
+      CPacket.Throttle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
+      CPacket.WheelThrottle = constrain(map(analogRead(pTHROTTLE),1023-deadzonethrottle,0+deadzonethrottle,0,1000),0,1000);
       
-      if(analogRead(pRX) >= 550){CPacket.Roll = constrain(map(analogRead(pRX),550,1000,0,200),0,200);}
-      else if(analogRead(pRX) <= 450){CPacket.Roll = constrain(map(analogRead(pRX),20,450,-200,0),-200,0);}
+      if(analogRead(pRX) >= 512+deadzone){CPacket.Roll = constrain(map(analogRead(pRX),512+deadzone,1023,0,500),0,500);}
+      else if(analogRead(pRX) <= 512-deadzone){CPacket.Roll = constrain(map(analogRead(pRX),0,512-deadzone,-500,0),-500,0);}
       else {CPacket.Roll = 0;}
-      if(analogRead(pRY) >= 550){CPacket.Pitch = constrain(map(analogRead(pRY),550,1000,0,200),0,200);}
-      else if(analogRead(pRY) <= 450){CPacket.Pitch = constrain(map(analogRead(pRY),20,450,-200,0),-200,0);}
+      if(analogRead(pRY) >= 512+deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),512+deadzone,1023,0,500),0,500);}
+      else if(analogRead(pRY) <= 512-deadzone){CPacket.Pitch = constrain(map(analogRead(pRY),0,512-deadzone,-500,0),-500,0);}
       else {CPacket.Pitch = 0;}
-      if(analogRead(pRZ) >= 550){CPacket.Yaw = constrain(map(analogRead(pRZ),550,1000,0,200),0,200);
-      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1000,550,-200,0),-200,0);}
-      else if(analogRead(pRZ) <= 450){CPacket.Yaw = constrain(map(analogRead(pRZ),20,450,-200,0),-200,0);
-      CPacket.WheelSteer = constrain(map(analogRead(pRZ),450,20,0,200),0,200);}
+      if(analogRead(pRZ) >= 512+deadzone){CPacket.Yaw = constrain(map(analogRead(pRZ),512+deadzone,1023,0,500),0,500);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pRZ) <= 512-deadzone){CPacket.Yaw = constrain(map(analogRead(pRZ),0,512-deadzone,-500,0),-500,0);
+      CPacket.WheelSteer = constrain(map(analogRead(pRZ),512-deadzone,0,0,500),0,500);}
       else {CPacket.Yaw = 0;
       CPacket.WheelSteer = 0;}
 
-      if(analogRead(pTX) >= 550){CPacket.TX = constrain(map(analogRead(pTX),1000,550,-200,0),-200,-0);}
-      else if(analogRead(pTX) <= 450){CPacket.TX = constrain(map(analogRead(pTX),450,20,0,200),0,200);}
+      if(analogRead(pTX) >= 512+deadzone){CPacket.TX = constrain(map(analogRead(pTX),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTX) <= 512-deadzone){CPacket.TX = constrain(map(analogRead(pTX),512-deadzone,0,0,500),0,500);}
       else {CPacket.TX = 0;}
-      if(analogRead(pTY) >= 550){CPacket.TY = constrain(map(analogRead(pTY),1000,550,-200,0),-200,-0);}
-      else if(analogRead(pTY) <= 450){CPacket.TY = constrain(map(analogRead(pTY),450,20,0,200),0,200);}
+      if(analogRead(pTY) >= 512+deadzone){CPacket.TY = constrain(map(analogRead(pTY),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTY) <= 512-deadzone){CPacket.TY = constrain(map(analogRead(pTY),512-deadzone,0,0,500),0,500);}
       else {CPacket.TY = 0;}
-      if(analogRead(pTZ) >= 550){CPacket.TZ = constrain(map(analogRead(pTZ),1000,550,-200,0),-200,0);}
-      else if(analogRead(pTZ) <= 450){CPacket.TZ = constrain(map(analogRead(pTZ),450,20,0,200),0,200);}
+      if(analogRead(pTZ) >= 512+deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),1023,512+deadzone,-500,0),-500,0);}
+      else if(analogRead(pTZ) <= 512-deadzone){CPacket.TZ = constrain(map(analogRead(pTZ),512-deadzone,0,0,500),0,500);}
       else {CPacket.TZ = 0;}
     
       break;

@@ -113,7 +113,7 @@ const byte pswitch4 = 65;    //A11 Switch position 4, display mode Body Info
 #define details(name) (uint8_t*)&name,sizeof(name)
 
 //variables used in timing
-const int IDLETIMER = 10000;        //if no message received from KSP for more than 10s, go idle (default 2000)
+const int IDLETIMER = 5000;        //if no message received from KSP for more than 10s, go idle (default 2000)
 const int CONTROLREFRESH = 20;      //send control packet every 10 ms (default 25)
 const int DISPLAYREFRESH = 50;      //refresh Display every 40 ms = 25fps
 unsigned long deadtime, deadtimeOld, controlTime, controlTimeOld, displayTime, displayTimeOld = 0;
@@ -281,8 +281,8 @@ ControlPacket CPacket;
 void setup() {
 
   Serial.begin(115200);  //KSPSerialIO connection
-  Serial1.begin(38400);  //Display1 connection
-  Serial2.begin(38400);  //Display2 connection
+  Serial1.begin(115200);  //Display1 connection
+  Serial2.begin(115200);  //Display2 connection
       PageDisplay1 = 0;
       PageDisplay2 = 0; 
       sendToDisplay1(String("page ") + String(PageDisplay1));
